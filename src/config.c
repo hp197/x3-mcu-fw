@@ -66,7 +66,7 @@ static void prv_tune_defaults(void) {
     g_tune.def_26 = 40u;
     g_tune.def_28 = 115u;
     g_tune.def_38 = 153u;
-    g_tune.def_44 = 20u;
+    g_tune.cmd_default = 20u;
     g_tune.def_46 = 10u;
     g_tune.def_48 = 10u;
     g_tune.k_02 = 0.2f;
@@ -99,9 +99,9 @@ static void prv_tune_parse(const uint8_t* p) {
     g_tune.val_32 = (uint16_t)(prv_rd16(&p[0x12]) >> 1);
     g_tune.val_34 = (uint16_t)(prv_rd16(&p[0x14]) >> 1);
     g_tune.cmd_thresh1 = prv_rd16(&p[0x3a]);
-    g_tune.cmd_thresh2 = p[0x3c];
+    g_tune.cmd_deadband = p[0x3c];
     g_tune.cmd_thresh3 = prv_rd16(&p[0x3d]);
-    g_tune.cmd_thresh4 = p[0x3f];
+    g_tune.cmd_ceiling = p[0x3f];
     g_tune.val_4a = p[0x67];
     g_tune.val_4c = p[0x0f];
     g_tune.val_60 = (int32_t)((uint32_t)prv_rd16(&p[0x53]) << 13);

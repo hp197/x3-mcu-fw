@@ -42,51 +42,52 @@
  * \brief           Parsed calibration / tune cells (from the flash calibration block)
  * \note            The device-specific cells are read from the flash calibration block at boot
  *                      (big-endian 16-bit) and the fixed cells are the defaults. Scales
- *                      are the real units; the raw counts are left as stored. The four command
- *                      thresholds bound the drive-command regions the control loop selects its
- *                      setpoint from. Cells whose role is not established keep an offset name.
+ *                      are the real units; the raw counts are left as stored. The control loop
+ *                      selects its setpoint between the command deadband and ceiling (the two
+ *                      cells it reads, plus the fixed default). Cells with no in-firmware consumer
+ *                      keep an offset name -- their role is not established.
  */
 typedef struct {
-    uint16_t cal_marker;  /*!< +0x00 calibration-block marker byte                     */
-    float scale_small;    /*!< +0x04 small scale (stored / 1e6)                        */
-    float scale_mid_a;    /*!< +0x08 mid scale A (stored / 1000)                       */
-    float k_cur_scale;    /*!< +0x0c current/voltage scale constant (0.273)            */
-    float scale_mid_b;    /*!< +0x10 mid scale B (stored / 1000)                       */
-    uint16_t val_14;      /*!< +0x14 stored cell                                       */
-    uint16_t val_16;      /*!< +0x16 stored cell (two bytes)                           */
-    uint16_t val_18;      /*!< +0x18 stored cell                                       */
-    uint16_t def_1c;      /*!< +0x1c fixed default (50)                                */
-    uint16_t val_1e;      /*!< +0x1e stored cell                                       */
-    uint16_t val_20;      /*!< +0x20 stored cell                                       */
-    uint16_t val_22;      /*!< +0x22 stored cell                                       */
-    uint16_t val_24;      /*!< +0x24 stored cell                                       */
-    uint16_t def_26;      /*!< +0x26 fixed default (40)                                */
-    uint16_t def_28;      /*!< +0x28 fixed default (115)                               */
-    uint16_t val_2a;      /*!< +0x2a stored cell                                       */
-    uint16_t val_2c;      /*!< +0x2c stored cell                                       */
-    uint16_t rsv_2e;      /*!< +0x2e reserved                                          */
-    uint16_t val_30;      /*!< +0x30 stored cell (stored >> 1)                         */
-    uint16_t val_32;      /*!< +0x32 stored cell (stored >> 1)                         */
-    uint16_t val_34;      /*!< +0x34 stored cell (stored >> 1)                         */
-    uint16_t rsv_36;      /*!< +0x36 reserved                                          */
-    uint16_t def_38;      /*!< +0x38 fixed default (153)                               */
-    uint16_t rsv_3a;      /*!< +0x3a reserved                                          */
-    uint16_t cmd_thresh1; /*!< +0x3c drive-command region threshold 1                  */
-    uint16_t cmd_thresh2; /*!< +0x3e drive-command region threshold 2                  */
-    uint16_t cmd_thresh3; /*!< +0x40 drive-command region threshold 3                  */
-    uint16_t cmd_thresh4; /*!< +0x42 drive-command region threshold 4                  */
-    uint16_t def_44;      /*!< +0x44 fixed default (20) = default setpoint             */
-    uint16_t def_46;      /*!< +0x46 fixed default (10)                                */
-    uint16_t def_48;      /*!< +0x48 fixed default (10)                                */
-    uint16_t val_4a;      /*!< +0x4a stored cell                                       */
-    uint16_t val_4c;      /*!< +0x4c stored cell (one byte)                            */
-    uint16_t rsv_4e;      /*!< +0x4e reserved                                          */
-    float k_02;           /*!< +0x50 fixed constant (0.2)                              */
-    uint16_t val_54;      /*!< +0x54 stored cell (0)                                   */
-    uint16_t val_56;      /*!< +0x56 fixed constant (0x3fc0)                           */
-    float k_13;           /*!< +0x58 fixed constant (1.3)                              */
-    float k_14;           /*!< +0x5c fixed constant (14.0)                             */
-    int32_t val_60;       /*!< +0x60 stored cell (stored << 13)                        */
+    uint16_t cal_marker;   /*!< +0x00 calibration-block marker byte                     */
+    float scale_small;     /*!< +0x04 small scale (stored / 1e6)                        */
+    float scale_mid_a;     /*!< +0x08 mid scale A (stored / 1000)                       */
+    float k_cur_scale;     /*!< +0x0c current/voltage scale constant (0.273)            */
+    float scale_mid_b;     /*!< +0x10 mid scale B (stored / 1000)                       */
+    uint16_t val_14;       /*!< +0x14 stored cell                                       */
+    uint16_t val_16;       /*!< +0x16 stored cell (two bytes)                           */
+    uint16_t val_18;       /*!< +0x18 stored cell                                       */
+    uint16_t def_1c;       /*!< +0x1c fixed default (50)                                */
+    uint16_t val_1e;       /*!< +0x1e stored cell                                       */
+    uint16_t val_20;       /*!< +0x20 stored cell                                       */
+    uint16_t val_22;       /*!< +0x22 stored cell                                       */
+    uint16_t val_24;       /*!< +0x24 stored cell                                       */
+    uint16_t def_26;       /*!< +0x26 fixed default (40)                                */
+    uint16_t def_28;       /*!< +0x28 fixed default (115)                               */
+    uint16_t val_2a;       /*!< +0x2a stored cell                                       */
+    uint16_t val_2c;       /*!< +0x2c stored cell                                       */
+    uint16_t rsv_2e;       /*!< +0x2e reserved                                          */
+    uint16_t val_30;       /*!< +0x30 stored cell (stored >> 1)                         */
+    uint16_t val_32;       /*!< +0x32 stored cell (stored >> 1)                         */
+    uint16_t val_34;       /*!< +0x34 stored cell (stored >> 1)                         */
+    uint16_t rsv_36;       /*!< +0x36 reserved                                          */
+    uint16_t def_38;       /*!< +0x38 fixed default (153)                               */
+    uint16_t rsv_3a;       /*!< +0x3a reserved                                          */
+    uint16_t cmd_thresh1;  /*!< +0x3c region threshold 1 (parsed; no consumer yet)      */
+    uint16_t cmd_deadband; /*!< +0x3e deadband: reference is the default below it (control.c) */
+    uint16_t cmd_thresh3;  /*!< +0x40 region threshold 3 (parsed; no consumer yet)      */
+    uint16_t cmd_ceiling;  /*!< +0x42 drive ceiling: the reference ramps to full at it (control.c) */
+    uint16_t cmd_default;  /*!< +0x44 fixed default (20): reference held below the deadband (control.c) */
+    uint16_t def_46;       /*!< +0x46 fixed default (10)                                */
+    uint16_t def_48;       /*!< +0x48 fixed default (10)                                */
+    uint16_t val_4a;       /*!< +0x4a stored cell                                       */
+    uint16_t val_4c;       /*!< +0x4c stored cell (one byte)                            */
+    uint16_t rsv_4e;       /*!< +0x4e reserved                                          */
+    float k_02;            /*!< +0x50 fixed constant (0.2)                              */
+    uint16_t val_54;       /*!< +0x54 stored cell (0)                                   */
+    uint16_t val_56;       /*!< +0x56 fixed constant (0x3fc0)                           */
+    float k_13;            /*!< +0x58 fixed constant (1.3)                              */
+    float k_14;            /*!< +0x5c fixed constant (14.0)                             */
+    int32_t val_60;        /*!< +0x60 stored cell (stored << 13)                        */
 } mcu_tune_t;
 
 /** \brief Prepare the flash controller: performance register (wait states + prefetch). */
