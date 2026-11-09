@@ -137,9 +137,9 @@ static float prv_cmd_to_iref(float cmd) {
     /* The command magnitude ramps from the stored deadband threshold up to full scale; below the
        deadband the reference holds at the default-setpoint fraction. The deadband and the drive
        ceiling are the stored tune cells (device-sourced); the default setpoint is 20. */
-    float dead = (float)prv_tune->cmd_thresh2 / (float)CTRL_CMD_FULL;
-    float ceiling = (float)prv_tune->cmd_thresh4 / (float)CTRL_CMD_FULL;
-    float dflt = (float)prv_tune->def_44 / (float)CTRL_CMD_FULL;
+    float dead = (float)prv_tune->cmd_deadband / (float)CTRL_CMD_FULL;
+    float ceiling = (float)prv_tune->cmd_ceiling / (float)CTRL_CMD_FULL;
+    float dflt = (float)prv_tune->cmd_default / (float)CTRL_CMD_FULL;
     float mag = (cmd < 0.0f) ? -cmd : cmd;
     float ref = dflt;
 
